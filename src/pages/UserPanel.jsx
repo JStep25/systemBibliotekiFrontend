@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getBooks, getMyLoans, returnBook } from "../services/api";
-import BookList from "../components/BookList";
+import BookList from "../components/BookList.jsx";
 import LogoutButton from "../components/LogoutButton";
 
 export default function UserPanel() {

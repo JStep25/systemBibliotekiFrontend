@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { getBooks } from "../services/api";
-import BookList from "../components/BookList";
-import AddBookModal from "../components/AddBookModal";
-import LogoutButton from "../components/LogoutButton";
+import BookList from "../components/BookList.jsx";
+import AddBookModal from "../components/AddBookModal.jsx";
+import LogoutButton from "../components/LogoutButton.jsx";
 
 export default function AdminPanel() {
   const [books, setBooks] = useState([]);
