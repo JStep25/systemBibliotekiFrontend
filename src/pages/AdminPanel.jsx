@@ -17,16 +17,17 @@ export default function AdminPanel() {
 
   return (
     <div className="container">
-      <header style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'20px'}}>
-        <h1>🛡️ Panel Admina</h1>
+      <header>
+        <h1>Panel administracyjny</h1>
         <LogoutButton />
       </header>
       
-      <button onClick={() => setShowModal(true)}>➕ Dodaj Książkę</button>
-      
-      <div className="mt">
-        <BookList books={books} refreshList={fetchBooks} isAdmin={true} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+        <h2>Zasoby biblioteczne</h2>
+        <button onClick={() => setShowModal(true)}>Dodaj nową książkę</button>
       </div>
+      
+      <BookList books={books} refreshList={fetchBooks} isAdmin={true} />
 
       {showModal && <AddBookModal onClose={() => setShowModal(false)} onAdded={fetchBooks} />}
     </div>

@@ -10,7 +10,7 @@ export default function LogoutButton() {
 
   return (
     <button className="danger" onClick={handleLogout}>
-      🚪 Wyloguj
+      Wyloguj profil
     </button>
   );
 }

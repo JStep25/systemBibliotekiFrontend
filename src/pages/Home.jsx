@@ -8,7 +8,6 @@ export default function Home() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const rawUser = localStorage.getItem("user");
-
     const user = rawUser ? JSON.parse(rawUser) : null;
 
     if (!token || !user) {
@@ -16,26 +15,22 @@ export default function Home() {
       return;
     }
 
-    if (user.role === "admin") {
-      navigate("/admin/books");
-    } else {
-      navigate("/user/books");
-    }
-
+    if (user.role === "admin") navigate("/admin/books");
+    else navigate("/user/books");
+    
     setLoading(false);
   }, [navigate]);
 
-  if (loading) {
-    return <h2 className="center">Loading...</h2>;
-  }
+  if (loading) return null;
 
   return (
-    <div className="container center">
-      <h1>📚 System Biblioteki</h1>
+    <div className="container center" style={{ maxWidth: '600px' }}>
+      <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Biblioteka Miejska</h1>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: '40px' }}>Witaj w systemie zarządzania zasobami bibliotecznymi.</p>
 
-      <div className="btn-group">
-        <button onClick={() => navigate("/login")}>Login</button>
-        <button onClick={() => navigate("/register")}>Register</button>
+      <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+        <button style={{ padding: '12px 30px' }} onClick={() => navigate("/login")}>Logowanie</button>
+        <button style={{ padding: '12px 30px' }} className="danger" onClick={() => navigate("/register")}>Rejestracja</button>
       </div>
     </div>
   );

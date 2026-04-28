@@ -1,9 +1,7 @@
-import { deleteBook, loanBook } from "../services/api";
-
 export default function BookList({ books, refreshList, isAdmin }) {
-  
+
   const handleDelete = async (id) => {
-    if (window.confirm("Czy na pewno chcesz usunąć tę książkę?")) {
+    if (window.confirm("Usunąć książkę?")) {
       await deleteBook(id);
       refreshList();
     }
@@ -13,30 +11,31 @@ export default function BookList({ books, refreshList, isAdmin }) {
     try {
       await loanBook({ id_ksiazki: id });
       refreshList();
-    } catch (err) {
-      alert("Nie można wypożyczyć książki");
+    } catch {
+      alert("Niedostępna");
     }
   };
 
   return (
     <div className="book-grid">
-      {books.map((book) => (
-        <div key={book.id_ksiazki} className="card">
-          <h3>{book.tytul}</h3>
-          <p>Autor: {book.autor}</p>
-          <span className={`badge ${book.status}`}>
-            {book.status === "dostepna" ? "Dostępna" : "Wypożyczona"}
+      {books.map((b) => (
+        <div key={b.id_ksiazki} className="card">
+          <h3>{b.tytul}</h3>
+          <p style={{ color: "var(--text-light)" }}>{b.autor}</p>
+
+          <span className={`badge ${b.status}`}>
+            {b.status === "dostepna" ? "Dostępna" : "Wypożyczona"}
           </span>
 
-          <div className="card-actions">
+          <div className="mt">
             {isAdmin ? (
-              <button className="btn-delete" onClick={() => handleDelete(book.id_ksiazki)}>
-                🗑️ Usuń
+              <button className="danger" onClick={() => handleDelete(b.id_ksiazki)}>
+                Usuń
               </button>
             ) : (
-              book.status === "dostepna" && (
-                <button className="btn-loan" onClick={() => handleLoan(book.id_ksiazki)}>
-                  📖 Wypożycz
+              b.status === "dostepna" && (
+                <button onClick={() => handleLoan(b.id_ksiazki)}>
+                  Wypożycz
                 </button>
               )
             )}
