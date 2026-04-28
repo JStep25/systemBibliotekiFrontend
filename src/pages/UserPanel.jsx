@@ -87,24 +87,56 @@ export default function UserPanel() {
       </section>
 
       <section style={{ marginTop: "40px" }}>
-        <h2>Historia wypożyczeń</h2>
+        <h2>Historia Twoich wypożyczeń</h2>
         <div className="book-grid">
-          {loans.map((l) => (
-            <div key={l.id_wypozyczenia} className="card" style={{ opacity: l.status_wypozyczenia === 'oddana' ? 0.7 : 1 }}>
-              <h4>{l.tytul}</h4>
-              <p>{l.autor}</p>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px" }}>
-                <span className={`badge ${l.status_wypozyczenia}`}>
-                  {l.status_wypozyczenia}
-                </span>
-                {l.status_wypozyczenia === 'aktywne' && (
-                  <button onClick={() => handleReturn(l.id_wypozyczenia)} disabled={loadingId === l.id_wypozyczenia}>
-                    {loadingId === l.id_wypozyczenia ? "..." : "Zwróć"}
-                  </button>
-                )}
+          {loans.length === 0 ? (
+            <p>Brak historii wypożyczeń.</p>
+          ) : (
+            loans.map((l) => (
+              <div 
+                key={l.id_wypozyczenia} 
+                className="card" 
+                style={{ 
+                  borderLeft: l.status_wypozyczenia === 'aktywne' ? "5px solid #2563eb" : "5px solid #94a3b8",
+                  background: l.status_wypozyczenia === 'oddana' ? "#f8fafc" : "#fff"
+                }}
+              >
+                <h4 style={{ margin: 0 }}>{l.tytul}</h4>
+                <p style={{ color: "#64748b", fontSize: "0.9rem" }}>{l.autor}</p>
+                
+                {/* Dodanie daty, jeśli backend ją przesyła */}
+                <div style={{ fontSize: "0.8rem", color: "#94a3b8", marginBottom: "10px" }}>
+                  {l.data_wypozyczenia && <span>Od: {new Date(l.data_wypozyczenia).toLocaleDateString()}</span>}
+                  {l.data_zwrotu && <span> | Do: {new Date(l.data_zwrotu).toLocaleDateString()}</span>}
+                </div>
+
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span 
+                    style={{ 
+                      fontSize: "0.8rem", 
+                      padding: "2px 8px", 
+                      borderRadius: "4px",
+                      background: l.status_wypozyczenia === 'aktywne' ? "#dbeafe" : "#e2e8f0",
+                      color: l.status_wypozyczenia === 'aktywne' ? "#1e40af" : "#475569",
+                      fontWeight: "bold"
+                    }}
+                  >
+                    {l.status_wypozyczenia.toUpperCase()}
+                  </span>
+
+                  {l.status_wypozyczenia === 'aktywne' && (
+                    <button 
+                      onClick={() => handleReturn(l.id_wypozyczenia)} 
+                      disabled={loadingId === l.id_wypozyczenia}
+                      style={{ padding: "5px 10px", fontSize: "0.8rem" }}
+                    >
+                      {loadingId === l.id_wypozyczenia ? "..." : "Zwróć teraz"}
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </section>
     </div>
