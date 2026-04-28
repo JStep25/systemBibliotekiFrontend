@@ -9,11 +9,7 @@ export default function AddBookModal({ onClose, onAdded }) {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-
-    const cleanTytul = tytul.trim();
-    const cleanAutor = autor.trim();
-
-    if (!cleanTytul || !cleanAutor) {
+    if (!tytul.trim() || !autor.trim()) {
       setError("Uzupełnij wszystkie pola.");
       return;
     }
@@ -21,18 +17,15 @@ export default function AddBookModal({ onClose, onAdded }) {
     try {
       setError("");
       setLoading(true);
-
       await addBook({
-        tytul: cleanTytul,
-        autor: cleanAutor,
+        tytul: tytul.trim(),
+        autor: autor.trim(),
         status: "dostepna"
       });
-
       onAdded();
       onClose();
-
     } catch (err) {
-      setError(err.response?.data?.message || "Nie udało się dodać książki.");
+      setError("Nie udało się dodać książki.");
       console.error(err.response?.data || err.message);
     } finally {
       setLoading(false);
@@ -40,9 +33,28 @@ export default function AddBookModal({ onClose, onAdded }) {
   };
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal">
-        <h2>Dodaj książkę</h2>
+    <div className="modal-backdrop" style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 1000
+    }}>
+      <div className="modal" style={{
+        background: "white",
+        padding: "2rem",
+        borderRadius: "12px",
+        width: "90%",
+        maxWidth: "500px",
+        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+        color: "#333" // Pewność, że tekst jest ciemny
+      }}>
+        <h2 style={{ marginTop: 0 }}>Dodaj nową książkę</h2>
 
         {error && (
           <div style={{
@@ -56,30 +68,43 @@ export default function AddBookModal({ onClose, onAdded }) {
           </div>
         )}
 
-        <form onSubmit={handleAdd} className="mt">
-          <label>Tytuł</label>
-          <input
-            type="text"
-            required
-            value={tytul}
-            onChange={e => setTytul(e.target.value)}
-          />
+        <form onSubmit={handleAdd} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          <div>
+            <label style={{ display: "block", marginBottom: "5px" }}>Tytuł</label>
+            <input
+              style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
+              value={tytul}
+              onChange={e => setTytul(e.target.value)}
+              required
+            />
+          </div>
 
-          <label className="mt">Autor</label>
-          <input
-            type="text"
-            required
-            value={autor}
-            onChange={e => setAutor(e.target.value)}
-          />
+          <div>
+            <label style={{ display: "block", marginBottom: "5px" }}>Autor</label>
+            <input
+              style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
+              value={autor}
+              onChange={e => setAutor(e.target.value)}
+              required
+            />
+          </div>
 
-          <div className="mt" style={{ display: "flex", gap: 10, justifyContent: "flex-end" }}>
-            <button type="button" className="danger" onClick={onClose} disabled={loading}>
+          <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: "10px" }}>
+            <button 
+              type="button" 
+              className="danger" 
+              onClick={onClose}
+              style={{ padding: "8px 16px", cursor: "pointer" }}
+            >
               Anuluj
             </button>
 
-            <button type="submit" disabled={loading}>
-              {loading ? "Dodawanie..." : "Dodaj"}
+            <button 
+              type="submit" 
+              disabled={loading}
+              style={{ padding: "8px 16px", cursor: "pointer", background: "var(--primary, #2563eb)", color: "white", border: "none", borderRadius: "4px" }}
+            >
+              {loading ? "Dodawanie..." : "Dodaj książkę"}
             </button>
           </div>
         </form>
