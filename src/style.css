@@ -1,189 +1,163 @@
-/* =============================
-   🎨 GLOBAL THEME - LIBRARY APP
-   Navy / Purple SaaS Style UI
-   ============================= */
-
 :root {
-  --bg: #0b1020;
-  --panel: #121a33;
-  --panel-2: #161f3d;
-  --text: #e6e9ff;
-  --muted: #aab0d6;
-
-  --primary: #6d5efc;
-  --primary-2: #8b7dff;
-  --danger: #ff4d6d;
-  --success: #2ee59d;
-
-  --border: rgba(255,255,255,0.08);
-  --shadow: 0 10px 30px rgba(0,0,0,0.35);
+  --bg-color: #f8fafc;
+  --panel-bg: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --success: #16a34a;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --radius: 8px;
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Inter, system-ui, Arial;
+  font-family: 'Inter', -apple-system, sans-serif;
 }
 
 body {
-  background: radial-gradient(circle at top, #141b3a, var(--bg));
-  color: var(--text);
-  min-height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.5;
 }
-
-/* =============================
-   LAYOUT
-   ============================= */
 
 .container {
-  max-width: 1100px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 30px;
+  padding: 2rem;
 }
 
-h1, h2, h3 {
-  margin-bottom: 10px;
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
 }
 
-h1 {
-  font-size: 28px;
-}
-
-h2 {
-  font-size: 22px;
-  color: var(--primary-2);
-}
-
-/* =============================
-   BUTTONS
-   ============================= */
+h1 { font-size: 1.875rem; font-weight: 700; letter-spacing: -0.025em; }
+h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; }
+h3 { font-size: 1.125rem; font-weight: 600; }
 
 button {
-  background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  border: none;
-  color: white;
-  padding: 10px 14px;
-  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
   cursor: pointer;
-  margin: 5px;
-  transition: 0.2s;
-  box-shadow: var(--shadow);
+  transition: all 0.2s;
+  background-color: var(--primary);
+  color: white;
 }
 
-button:hover {
-  transform: translateY(-2px);
-  opacity: 0.95;
-}
+button:hover { background-color: var(--primary-hover); }
 
-button:active {
-  transform: scale(0.97);
-}
-
-/* danger button */
 button.danger {
-  background: linear-gradient(135deg, var(--danger), #ff7a90);
+  background-color: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
 }
 
-/* =============================
-   INPUTS
-   ============================= */
+button.danger:hover {
+  background-color: var(--danger);
+  color: white;
+}
 
 input {
-  display: block;
   width: 100%;
-  max-width: 320px;
-  padding: 10px 12px;
-  margin: 8px 0;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--panel);
-  color: var(--text);
-  outline: none;
+  padding: 0.625rem;
+  margin: 0.5rem 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  background: white;
+  color: var(--text-main);
+  font-size: 0.875rem;
 }
 
 input:focus {
-  border-color: var(--primary);
+  outline: 2px solid var(--primary);
+  border-color: transparent;
 }
 
-/* =============================
-   CARDS (BOOKS)
-   ============================= */
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
 
 .card {
-  background: var(--panel);
-  padding: 15px;
-  border-radius: 14px;
-  margin-bottom: 12px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
+  background: var(--panel-bg);
+  padding: 1.25rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.card:hover {
-  transform: translateY(-2px);
-  transition: 0.2s;
+.card:hover { box-shadow: var(--shadow-md); }
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
 }
 
-.status {
-  font-size: 12px;
-  color: var(--muted);
-}
+.badge.dostepna { background: #dcfce7; color: var(--success); }
+.badge.wypozyczona { background: #fee2e2; color: var(--danger); }
 
-.available {
-  color: var(--success);
+.card-actions {
+  margin-top: 1.25rem;
+  display: flex;
+  gap: 0.5rem;
 }
-
-.unavailable {
-  color: var(--danger);
-}
-
-/* =============================
-   MODAL
-   ============================= */
 
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 50;
 }
 
 .modal {
-  background: var(--panel-2);
-  padding: 20px;
-  border-radius: 14px;
-  width: 360px;
-  box-shadow: var(--shadow);
-}
-
-/* =============================
-   AUTH PAGES
-   ============================= */
-
-.auth {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius);
+  width: 100%;
   max-width: 400px;
-  margin: 80px auto;
-  background: var(--panel);
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-md);
 }
 
-.auth h2 {
-  text-align: center;
-  margin-bottom: 20px;
+.auth-container {
+  max-width: 400px;
+  margin: 100px auto;
+  background: white;
+  padding: 2.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
 }
 
-/* =============================
-   NAV HELPERS
-   ============================= */
-
-.center {
-  text-align: center;
-}
-
-.mt {
-  margin-top: 20px;
-}
+.center { text-align: center; }
+.mt { margin-top: 2rem; }
+.error-msg { color: var(--danger); font-size: 0.875rem; margin-bottom: 1rem; }

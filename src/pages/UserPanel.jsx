@@ -23,27 +23,38 @@ export default function UserPanel() {
 
   return (
     <div className="container">
-      <header style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-        <h1>📖 Katalog Książek</h1>
+      <header>
+        <h1>Panel Czytelnika</h1>
         <LogoutButton />
       </header>
 
-      <div className="mt">
+      <section>
+        <h2>Dostępne książki</h2>
         <BookList books={books} refreshList={fetchData} isAdmin={false} />
-      </div>
+      </section>
 
-      <h2 className="mt"> Moje Wypożyczenia</h2>
-      {loans.map(l => (
-        <div key={l.id_wypozyczenia} className="card" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-          <div>
-            <h4>{l.tytul}</h4>
-            <p className="status">{l.autor} — <span className={l.status_wypozyczenia === 'aktywne' ? 'available' : ''}>{l.status_wypozyczenia}</span></p>
-          </div>
-          {l.status_wypozyczenia === 'aktywne' && (
-            <button onClick={() => handleReturn(l.id_wypozyczenia, l.id_ksiazki)}>Oddaj</button>
-          )}
+      <section className="mt" style={{ paddingTop: '40px' }}>
+        <h2>Twoje aktywne wypożyczenia</h2>
+        <div className="book-grid mt">
+          {loans.length === 0 && <p style={{ color: 'var(--text-secondary)' }}>Brak aktywnych wypożyczeń.</p>}
+          {loans.map(l => (
+            <div key={l.id_wypozyczenia} className="card" style={{ borderLeft: '4px solid var(--primary)' }}>
+              <h4 style={{ marginBottom: '4px' }}>{l.tytul}</h4>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{l.autor}</p>
+              <div className="mt" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--success)' }}>
+                  Status: {l.status_wypozyczenia}
+                </span>
+                {l.status_wypozyczenia === 'aktywne' && (
+                  <button onClick={() => handleReturn(l.id_wypozyczenia, l.id_ksiazki)}>
+                    Zwróć
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </section>
     </div>
   );
 }
