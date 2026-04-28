@@ -8,7 +8,6 @@ export default function AdminPanel() {
   const [books, setBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [success, setSuccess] = useState("");
 
   const fetchBooks = async () => {
     const res = await getBooks();
@@ -29,25 +28,23 @@ export default function AdminPanel() {
         <LogoutButton />
       </header>
 
-      <div style={{ marginTop: "20px", display: "flex", gap: "10px", alignItems: "flex-end" }}>
-        <div style={{ flex: 1 }}>
-          <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Szukaj w zasobach:</label>
-          <input 
-            type="text" 
-            placeholder="Tytuł / Autor..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
-          />
-        </div>
-        <button onClick={() => setShowModal(true)} style={{ height: "42px" }}>+ Dodaj książkę</button>
+      <div style={{ marginTop: "20px", display: "flex", gap: "10px", alignItems: "center" }}>
+        <strong style={{ whiteSpace: "nowrap" }}>Szukaj:</strong>
+        <input 
+          type="text" 
+          placeholder="Tytuł / Autor..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ flex: 1, padding: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
+        />
+        <button onClick={() => setShowModal(true)} style={{ height: "40px", whiteSpace: "nowrap" }}>+ Dodaj książkę</button>
       </div>
 
       <section style={{ marginTop: "30px" }}>
         <BookList books={filteredBooks} refreshList={fetchBooks} isAdmin={true} />
       </section>
 
-      {showModal && <AddBookModal onClose={() => setShowModal(false)} onAdded={() => { fetchBooks(); setSuccess("Dodano!"); }} />}
+      {showModal && <AddBookModal onClose={() => setShowModal(false)} onAdded={fetchBooks} />}
     </div>
   );
 }

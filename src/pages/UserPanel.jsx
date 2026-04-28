@@ -61,18 +61,18 @@ export default function UserPanel() {
         <LogoutButton />
       </header>
 
-      {error && <div style={{ background: "#fee2e2", padding: "10px", borderRadius: "8px" }}>{error}</div>}
-      {success && <div style={{ background: "#dcfce7", padding: "10px", borderRadius: "8px" }}>{success}</div>}
+      {error && <div style={{ background: "#fee2e2", padding: "10px", borderRadius: "8px", marginBottom: "10px" }}>{error}</div>}
+      {success && <div style={{ background: "#dcfce7", padding: "10px", borderRadius: "8px", marginBottom: "10px" }}>{success}</div>}
 
       <section style={{ marginTop: "20px" }}>
-        <div style={{ marginBottom: "20px", background: "#f3f4f6", padding: "15px", borderRadius: "10px" }}>
-          <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold" }}>Wyszukaj książkę:</label>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "20px" }}>
+          <strong style={{ whiteSpace: "nowrap" }}>Szukaj:</strong>
           <input 
             type="text" 
             placeholder="Wpisz tytuł lub autora..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
+            style={{ flex: 1, padding: "10px", borderRadius: "5px", border: "1px solid #ccc" }}
           />
         </div>
 
@@ -87,15 +87,22 @@ export default function UserPanel() {
       </section>
 
       <section style={{ marginTop: "40px" }}>
-        <h2>Twoje aktywne wypożyczenia</h2>
+        <h2>Historia wypożyczeń</h2>
         <div className="book-grid">
-          {loans.filter(l => l.status_wypozyczenia === 'aktywne').map((l) => (
-            <div key={l.id_wypozyczenia} className="card">
+          {loans.map((l) => (
+            <div key={l.id_wypozyczenia} className="card" style={{ opacity: l.status_wypozyczenia === 'oddana' ? 0.7 : 1 }}>
               <h4>{l.tytul}</h4>
               <p>{l.autor}</p>
-              <button onClick={() => handleReturn(l.id_wypozyczenia)} disabled={loadingId === l.id_wypozyczenia}>
-                {loadingId === l.id_wypozyczenia ? "Czekaj..." : "Zwróć"}
-              </button>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px" }}>
+                <span className={`badge ${l.status_wypozyczenia}`}>
+                  {l.status_wypozyczenia}
+                </span>
+                {l.status_wypozyczenia === 'aktywne' && (
+                  <button onClick={() => handleReturn(l.id_wypozyczenia)} disabled={loadingId === l.id_wypozyczenia}>
+                    {loadingId === l.id_wypozyczenia ? "..." : "Zwróć"}
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
