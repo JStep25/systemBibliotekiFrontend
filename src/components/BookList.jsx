@@ -1,6 +1,6 @@
-import { deleteBook, loanBook } from "../services/api";
+import { deleteBook } from "../services/api";
 
-export default function BookList({ books, refreshList, isAdmin }) {
+export default function BookList({ books, refreshList, isAdmin, onLoan, loadingId }) {
 
   const handleDelete = async (id) => {
     if (window.confirm("Czy na pewno chcesz usunąć tę książkę?")) {
@@ -8,20 +8,8 @@ export default function BookList({ books, refreshList, isAdmin }) {
         await deleteBook(id);
         refreshList();
       } catch (err) {
-        console.error("Błąd podczas usuwania:", err);
         alert("Nie udało się usunąć książki.");
       }
-    }
-  };
-
-  const handleLoan = async (id) => {
-    try {
-      // Wysyłamy obiekt z kluczem id_ksiazki, którego oczekuje backend
-      await loanBook({ id_ksiazki: id });
-      refreshList();
-    } catch (err) {
-      console.error("Błąd wypożyczania:", err.response?.data || err.message);
-      alert("Książka jest już niedostępna lub wystąpił błąd serwera.");
     }
   };
 
@@ -41,16 +29,16 @@ export default function BookList({ books, refreshList, isAdmin }) {
 
             <div className="mt">
               {isAdmin ? (
-                <button 
-                  className="danger" 
-                  onClick={() => handleDelete(b.id_ksiazki)}
-                >
+                <button className="danger" onClick={() => handleDelete(b.id_ksiazki)}>
                   Usuń
                 </button>
               ) : (
                 b.status === "dostepna" && (
-                  <button onClick={() => handleLoan(b.id_ksiazki)}>
-                    Wypożycz
+                  <button 
+                    onClick={() => onLoan(b.id_ksiazki)} 
+                    disabled={loadingId === b.id_ksiazki}
+                  >
+                    {loadingId === b.id_ksiazki ? "Przetwarzanie..." : "Wypożycz"}
                   </button>
                 )
               )}

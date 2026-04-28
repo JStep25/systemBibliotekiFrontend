@@ -13,6 +13,7 @@ export default function UserPanel() {
   const fetchData = async () => {
     try {
       setError("");
+      // Pobieramy obie listy jednocześnie, aby stany były spójne
       const [booksRes, loansRes] = await Promise.all([
         getBooks(),
         getMyLoans()
@@ -29,24 +30,6 @@ export default function UserPanel() {
     fetchData();
   }, []);
 
-  const handleLoan = async (bookId) => {
-    try {
-      setError("");
-      setSuccess("");
-      setLoadingId(bookId);
-
-      // Kluczowe: upewnij się, że backend oczekuje 'id_ksiazki'
-      await loanBook({ id_ksiazki: bookId });
-
-      setSuccess("Książka została wypożyczona!");
-      await fetchData(); // Odświeżamy obie listy
-    } catch (err) {
-      setError(err.response?.data?.error || "Książka nie jest już dostępna.");
-    } finally {
-      setLoadingId(null);
-    }
-  };
-
   const handleReturn = async (loanId) => {
     try {
       setError("");
@@ -56,9 +39,26 @@ export default function UserPanel() {
       await returnBook({ id_wypozyczenia: loanId });
 
       setSuccess("Książka została zwrócona.");
-      await fetchData();
+      // ODŚWIEŻENIE: To musi pobrać nowe statusy książek z API
+      await fetchData(); 
+
     } catch (err) {
       setError("Nie udało się zwrócić książki.");
+    } finally {
+      setLoadingId(null);
+    }
+  };
+
+  const handleLoan = async (bookId) => {
+    try {
+      setError("");
+      setSuccess("");
+      setLoadingId(bookId);
+      await loanBook({ id_ksiazki: bookId });
+      setSuccess("Książka została wypożyczona!");
+      await fetchData();
+    } catch (err) {
+      setError(err.response?.data?.error || "Książka nie jest już dostępna.");
     } finally {
       setLoadingId(null);
     }
@@ -89,29 +89,23 @@ export default function UserPanel() {
           books={books} 
           refreshList={fetchData} 
           isAdmin={false} 
-          onLoan={handleLoan} // Przekazujemy funkcję wypożyczania
+          onLoan={handleLoan} 
           loadingId={loadingId}
         />
       </section>
 
       <section className="mt" style={{ paddingTop: "40px" }}>
         <h2>Twoje aktywne wypożyczenia</h2>
-
         <div className="book-grid mt">
-          {loans.length === 0 && (
-            <p style={{ color: "var(--text-light)" }}>Brak aktywnych wypożyczeń.</p>
-          )}
-
+          {loans.length === 0 && <p style={{ color: "var(--text-light)" }}>Brak aktywnych wypożyczeń.</p>}
           {loans.map((l) => (
             <div key={l.id_wypozyczenia} className="card" style={{ borderLeft: "4px solid var(--primary)" }}>
               <h4>{l.tytul}</h4>
               <p style={{ fontSize: "0.9rem", color: "var(--text-light)" }}>{l.autor}</p>
-
               <div className="mt" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span style={{ fontSize: "0.85rem", fontWeight: 600, color: l.status_wypozyczenia === "aktywne" ? "#16a34a" : "#64748b" }}>
                   {l.status_wypozyczenia}
                 </span>
-
                 {l.status_wypozyczenia === "aktywne" && (
                   <button onClick={() => handleReturn(l.id_wypozyczenia)} disabled={loadingId === l.id_wypozyczenia}>
                     {loadingId === l.id_wypozyczenia ? "Zwracanie..." : "Zwróć"}
