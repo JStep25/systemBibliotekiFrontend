@@ -15,10 +15,8 @@ export default function AdminPanel() {
     try {
       setError("");
       setLoading(true);
-
       const res = await getBooks();
       setBooks(res.data);
-
     } catch (err) {
       setError("Nie udało się pobrać książek.");
       console.error(err.response?.data || err.message);
@@ -34,6 +32,7 @@ export default function AdminPanel() {
   const handleAdded = () => {
     setSuccess("Książka została dodana.");
     fetchBooks();
+    setTimeout(() => setSuccess(""), 3000);
   };
 
   return (
