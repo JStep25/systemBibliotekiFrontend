@@ -1,15 +1,14 @@
 import { deleteBook } from "../services/api";
 
-export default function BookList({ books, refreshList, isAdmin, onLoan, loadingId }) {
+export default function BookList({ books, refreshList, isAdmin, onLoan, loadingId, onError, onSuccess }) {
 
   const handleDelete = async (id) => {
-    if (window.confirm("Czy na pewno chcesz usunąć tę książkę?")) {
-      try {
-        await deleteBook(id);
-        refreshList();
-      } catch (err) {
-        alert("Nie udało się usunąć książki.");
-      }
+    try {
+      await deleteBook(id);
+      if (onSuccess) onSuccess("Książka została usunięta.");
+      refreshList();
+    } catch (err) {
+      if (onError) onError("Nie można usunąć książki (prawdopodobnie jest powiązana z historią wypożyczeń).");
     }
   };
 
@@ -29,7 +28,16 @@ export default function BookList({ books, refreshList, isAdmin, onLoan, loadingI
 
             <div className="mt">
               {isAdmin ? (
-                <button className="danger" onClick={() => handleDelete(b.id_ksiazki)}>
+                <button 
+                  className="danger" 
+                  onClick={() => handleDelete(b.id_ksiazki)}
+                  disabled={b.status === "wypozyczona"}
+                  style={{ 
+                    opacity: b.status === "wypozyczona" ? 0.5 : 1,
+                    cursor: b.status === "wypozyczona" ? "not-allowed" : "pointer"
+                  }}
+                  title={b.status === "wypozyczona" ? "Nie można usunąć wypożyczonej książki" : ""}
+                >
                   Usuń
                 </button>
               ) : (

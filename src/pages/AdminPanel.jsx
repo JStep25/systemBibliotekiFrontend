@@ -8,13 +8,29 @@ export default function AdminPanel() {
   const [books, setBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const fetchBooks = async () => {
-    const res = await getBooks();
-    setBooks(res.data);
+    try {
+      const res = await getBooks();
+      setBooks(res.data);
+    } catch (err) {
+      showTemporaryError("Nie udało się odświeżyć listy książek.");
+    }
   };
 
   useEffect(() => { fetchBooks(); }, []);
+
+  const showTemporaryError = (msg) => {
+    setError(msg);
+    setTimeout(() => setError(""), 5000);
+  };
+
+  const showTemporarySuccess = (msg) => {
+    setSuccess(msg);
+    setTimeout(() => setSuccess(""), 3000);
+  };
 
   const filteredBooks = books.filter(b =>
     b.tytul.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -28,7 +44,39 @@ export default function AdminPanel() {
         <LogoutButton />
       </header>
 
-      <div style={{ marginTop: "20px", display: "flex", gap: "10px", alignItems: "center" }}>
+      {/* Graficzne powiadomienia o błędach/sukcesach zamiast alertów */}
+      <div style={{ minHeight: "50px", marginTop: "10px" }}>
+        {error && (
+          <div style={{ 
+            background: "#fee2e2", 
+            color: "#b91c1c", 
+            padding: "12px", 
+            borderRadius: "8px", 
+            border: "1px solid #fecaca",
+            display: "flex",
+            alignItems: "center",
+            fontWeight: "500"
+          }}>
+            <span style={{ marginRight: "10px" }}>⚠️</span> {error}
+          </div>
+        )}
+        {success && (
+          <div style={{ 
+            background: "#dcfce7", 
+            color: "#15803d", 
+            padding: "12px", 
+            borderRadius: "8px", 
+            border: "1px solid #bbf7d0",
+            display: "flex",
+            alignItems: "center",
+            fontWeight: "500"
+          }}>
+            <span style={{ marginRight: "10px" }}>✅</span> {success}
+          </div>
+        )}
+      </div>
+
+      <div style={{ marginTop: "10px", display: "flex", gap: "10px", alignItems: "center" }}>
         <strong style={{ whiteSpace: "nowrap" }}>Szukaj:</strong>
         <input 
           type="text" 
@@ -41,10 +89,25 @@ export default function AdminPanel() {
       </div>
 
       <section style={{ marginTop: "30px" }}>
-        <BookList books={filteredBooks} refreshList={fetchBooks} isAdmin={true} />
+        {/* Przekazujemy funkcje powiadomień do BookList, aby tam też nie było alertów */}
+        <BookList 
+          books={filteredBooks} 
+          refreshList={fetchBooks} 
+          isAdmin={true} 
+          onError={showTemporaryError}
+          onSuccess={showTemporarySuccess}
+        />
       </section>
 
-      {showModal && <AddBookModal onClose={() => setShowModal(false)} onAdded={fetchBooks} />}
+      {showModal && (
+        <AddBookModal 
+          onClose={() => setShowModal(false)} 
+          onAdded={() => { 
+            fetchBooks(); 
+            showTemporarySuccess("Książka została dodana pomyślnie!"); 
+          }} 
+        />
+      )}
     </div>
   );
 }
