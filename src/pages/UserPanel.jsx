@@ -118,7 +118,7 @@ export default function UserPanel() {
 
       {/* SEKCJA 2: HISTORIA */}
       <section style={{ marginTop: "40px", paddingBottom: "40px" }}>
-        <h2 style={{ color: "#64748b" }}>Historia (zwrócone)</h2>
+        <h2 style={{ color: "#64748b" }}>Historia wyporzyczeń</h2>
         <div className="book-grid">
           {historyLoans.length === 0 ? (
             <p style={{ color: "#94a3b8" }}>Brak historii zwrotów.</p>
