@@ -54,6 +54,10 @@ export default function UserPanel() {
     b.autor.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Filtrowanie na dwie grupy
+  const activeLoans = loans.filter(l => l.status_wypozyczenia === 'aktywne');
+  const historyLoans = loans.filter(l => l.status_wypozyczenia === 'oddana');
+
   return (
     <div className="container">
       <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -86,54 +90,44 @@ export default function UserPanel() {
         />
       </section>
 
+      {/* SEKCJA 1: AKTYWNE */}
       <section style={{ marginTop: "40px" }}>
-        <h2>Historia Twoich wypożyczeń</h2>
+        <h2 style={{ color: "#2563eb" }}>Twoje aktualnie wypożyczone książki</h2>
         <div className="book-grid">
-          {loans.length === 0 ? (
-            <p>Brak historii wypożyczeń.</p>
+          {activeLoans.length === 0 ? (
+            <p style={{ color: "#64748b" }}>Nie masz obecnie żadnych wypożyczonych książek.</p>
           ) : (
-            loans.map((l) => (
-              <div 
-                key={l.id_wypozyczenia} 
-                className="card" 
-                style={{ 
-                  borderLeft: l.status_wypozyczenia === 'aktywne' ? "5px solid #2563eb" : "5px solid #94a3b8",
-                  background: l.status_wypozyczenia === 'oddana' ? "#f8fafc" : "#fff"
-                }}
-              >
+            activeLoans.map((l) => (
+              <div key={l.id_wypozyczenia} className="card" style={{ borderLeft: "5px solid #2563eb" }}>
                 <h4 style={{ margin: 0 }}>{l.tytul}</h4>
                 <p style={{ color: "#64748b", fontSize: "0.9rem" }}>{l.autor}</p>
-                
-                {/* Dodanie daty, jeśli backend ją przesyła */}
-                <div style={{ fontSize: "0.8rem", color: "#94a3b8", marginBottom: "10px" }}>
-                  {l.data_wypozyczenia && <span>Od: {new Date(l.data_wypozyczenia).toLocaleDateString()}</span>}
-                  {l.data_zwrotu && <span> | Do: {new Date(l.data_zwrotu).toLocaleDateString()}</span>}
-                </div>
-
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span 
-                    style={{ 
-                      fontSize: "0.8rem", 
-                      padding: "2px 8px", 
-                      borderRadius: "4px",
-                      background: l.status_wypozyczenia === 'aktywne' ? "#dbeafe" : "#e2e8f0",
-                      color: l.status_wypozyczenia === 'aktywne' ? "#1e40af" : "#475569",
-                      fontWeight: "bold"
-                    }}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px" }}>
+                  <span style={{ fontSize: "0.8rem", fontWeight: "bold", color: "#1e40af" }}>AKTYWNE</span>
+                  <button 
+                    onClick={() => handleReturn(l.id_wypozyczenia)} 
+                    disabled={loadingId === l.id_wypozyczenia}
                   >
-                    {l.status_wypozyczenia.toUpperCase()}
-                  </span>
-
-                  {l.status_wypozyczenia === 'aktywne' && (
-                    <button 
-                      onClick={() => handleReturn(l.id_wypozyczenia)} 
-                      disabled={loadingId === l.id_wypozyczenia}
-                      style={{ padding: "5px 10px", fontSize: "0.8rem" }}
-                    >
-                      {loadingId === l.id_wypozyczenia ? "..." : "Zwróć teraz"}
-                    </button>
-                  )}
+                    {loadingId === l.id_wypozyczenia ? "..." : "Oddaj książkę"}
+                  </button>
                 </div>
+              </div>
+            ))
+          )}
+        </div>
+      </section>
+
+      {/* SEKCJA 2: HISTORIA */}
+      <section style={{ marginTop: "40px", paddingBottom: "40px" }}>
+        <h2 style={{ color: "#64748b" }}>Historia (zwrócone)</h2>
+        <div className="book-grid">
+          {historyLoans.length === 0 ? (
+            <p style={{ color: "#94a3b8" }}>Brak historii zwrotów.</p>
+          ) : (
+            historyLoans.map((l) => (
+              <div key={l.id_wypozyczenia} className="card" style={{ borderLeft: "5px solid #cbd5e1", background: "#f8fafc", opacity: 0.8 }}>
+                <h4 style={{ margin: 0 }}>{l.tytul}</h4>
+                <p style={{ color: "#94a3b8", fontSize: "0.8rem" }}>{l.autor}</p>
+                <span style={{ fontSize: "0.7rem", color: "#94a3b8", fontWeight: "bold" }}>ODDANA</span>
               </div>
             ))
           )}
