@@ -10,7 +10,7 @@ const HomeRedirect = () => {
   const userData = localStorage.getItem("user");
 
   if (!token || !userData) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   try {
