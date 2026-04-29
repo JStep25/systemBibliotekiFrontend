@@ -11,17 +11,33 @@ export default function Register() {
   });
 
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
+
+    if (form.haslo.length < 8) {
+      setError("Hasło musi mieć co najmniej 8 znaków.");
+      return;
+    }
+
     try {
+      setLoading(true);
       await registerUser(form);
-      navigate("/login");
-    } catch {
-      setError("Nie udało się utworzyć konta.");
+      setSuccess(true); 
+
+     
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+      
+    } catch (err) {
+      setError("Nie udało się utworzyć konta. Być może email jest już zajęty.");
+      setLoading(false);
     }
   };
 
@@ -32,16 +48,34 @@ export default function Register() {
         Utwórz nowe konto użytkownika
       </p>
 
+
       {error && (
         <div style={{
           background: "#fee2e2",
           color: "#991b1b",
-          padding: "10px",
+          padding: "12px",
           borderRadius: "8px",
           marginBottom: "15px",
-          fontSize: "0.9rem"
+          fontSize: "0.9rem",
+          border: "1px solid #fecaca"
         }}>
-          {error}
+          ⚠️ {error}
+        </div>
+      )}
+
+
+      {success && (
+        <div style={{
+          background: "#dcfce7",
+          color: "#166534",
+          padding: "12px",
+          borderRadius: "8px",
+          marginBottom: "15px",
+          fontSize: "0.9rem",
+          border: "1px solid #bbf7d0",
+          textAlign: "center"
+        }}>
+          ✅ Konto utworzone pomyślnie! Zaraz nastąpi przekierowanie do logowania...
         </div>
       )}
 
@@ -52,6 +86,7 @@ export default function Register() {
             placeholder="Jan"
             onChange={e => setForm({ ...form, imie: e.target.value })}
             required
+            disabled={success || loading}
           />
         </div>
 
@@ -61,6 +96,7 @@ export default function Register() {
             placeholder="Kowalski"
             onChange={e => setForm({ ...form, nazwisko: e.target.value })}
             required
+            disabled={success || loading}
           />
         </div>
 
@@ -71,6 +107,7 @@ export default function Register() {
             placeholder="email@adres.pl"
             onChange={e => setForm({ ...form, email: e.target.value })}
             required
+            disabled={success || loading}
           />
         </div>
 
@@ -81,20 +118,26 @@ export default function Register() {
             placeholder="Minimum 8 znaków"
             onChange={e => setForm({ ...form, haslo: e.target.value })}
             required
+            disabled={success || loading}
           />
         </div>
 
-        <button style={{ width: "100%", marginTop: 25 }}>
-          Utwórz konto
+        <button 
+          style={{ width: "100%", marginTop: 25 }} 
+          disabled={success || loading}
+        >
+          {loading ? "Przetwarzanie..." : "Utwórz konto"}
         </button>
       </form>
 
-      <p style={{ marginTop: 25, fontSize: "0.9rem" }}>
-        Masz już konto?{" "}
-        <Link to="/login" style={{ color: "var(--primary)", fontWeight: 600 }}>
-          Zaloguj się
-        </Link>
-      </p>
+      {!success && (
+        <p style={{ marginTop: 25, fontSize: "0.9rem" }}>
+          Masz już konto?{" "}
+          <Link to="/login" style={{ color: "var(--primary)", fontWeight: 600 }}>
+            Zaloguj się
+          </Link>
+        </p>
+      )}
     </div>
   );
 }
