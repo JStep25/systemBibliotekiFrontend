@@ -54,7 +54,6 @@ export default function UserPanel() {
     b.autor.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Filtrowanie na dwie grupy
   const activeLoans = loans.filter(l => l.status_wypozyczenia === 'aktywne');
   const historyLoans = loans.filter(l => l.status_wypozyczenia === 'oddana');
 
@@ -90,7 +89,6 @@ export default function UserPanel() {
         />
       </section>
 
-      {/* SEKCJA 1: AKTYWNE */}
       <section style={{ marginTop: "40px" }}>
         <h2 style={{ color: "#2563eb" }}>Twoje aktualnie wypożyczone książki</h2>
         <div className="book-grid">
@@ -116,7 +114,7 @@ export default function UserPanel() {
         </div>
       </section>
 
-      {/* SEKCJA 2: HISTORIA */}
+
       <section style={{ marginTop: "40px", paddingBottom: "40px" }}>
         <h2 style={{ color: "#64748b" }}>Historia wyporzyczeń</h2>
         <div className="book-grid">

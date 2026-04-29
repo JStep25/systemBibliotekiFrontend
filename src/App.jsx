@@ -1,28 +1,52 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Home from "./pages/Home";
 import AdminPanel from "./pages/AdminPanel";
 import UserPanel from "./pages/UserPanel";
+
+const HomeRedirect = () => {
+  const token = localStorage.getItem("token");
+  const userData = localStorage.getItem("user");
+
+  if (!token || !userData) {
+    return <Navigate to="/login" replace />;
+  }
+
+  try {
+    const user = JSON.parse(userData);
+    
+    if (user.role === "admin") {
+      return <Navigate to="/admin/books" replace />;
+    }
+    return <Navigate to="/user/books" replace />;
+  } catch (err) {
+   
+    localStorage.clear();
+    return <Navigate to="/login" replace />;
+  }
+};
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        
 
-        {/* HOME */}
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<HomeRedirect />} />
 
-        {/* AUTH */}
+
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* USER */}
+
         <Route path="/user/books" element={<UserPanel />} />
 
-        {/* ADMIN */}
+
         <Route path="/admin/books" element={<AdminPanel />} />
+
+
+        <Route path="*" element={<Navigate to="/" replace />} />
 
       </Routes>
     </BrowserRouter>
