@@ -25,7 +25,7 @@ export default function Home() {
 
   return (
     <div className="container center" style={{ maxWidth: '600px' }}>
-      <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Biblioteka Miejska</h1>
+      <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Biblioteka</h1>
       <p style={{ color: 'var(--text-secondary)', marginBottom: '40px' }}>Witaj w systemie zarządzania zasobami bibliotecznymi.</p>
 
       <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
