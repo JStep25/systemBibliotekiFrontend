@@ -75,9 +75,7 @@ export default function EditBookModal({ book, onClose, onUpdated }) {
           </div>
 
 
-          <div style={{ fontSize: "0.85rem", color: "#666", fontStyle: "italic" }}>
-            Status: {book.status === "dostepna" ? "Dostępna" : "Wypożyczona"} (edycja statusu odbywa się poprzez system wypożyczeń).
-          </div>
+          
 
           <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: "10px" }}>
             <button 
