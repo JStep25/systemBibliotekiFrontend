@@ -52,7 +52,7 @@ export default function AddBookModal({ onClose, onAdded }) {
         width: "90%",
         maxWidth: "500px",
         boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-        color: "#333" // Pewność, że tekst jest ciemny
+        color: "#333" 
       }}>
         <h2 style={{ marginTop: 0 }}>Dodaj nową książkę</h2>
 

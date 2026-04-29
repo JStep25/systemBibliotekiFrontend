@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { getBooks } from "../services/api";
 import BookList from "../components/BookList.jsx";
 import AddBookModal from "../components/AddBookModal.jsx";
+import EditBookModal from "../components/EditBookModal.jsx";
 import LogoutButton from "../components/LogoutButton.jsx";
 
 export default function AdminPanel() {
   const [books, setBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [editingBook, setEditingBook] = useState(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -44,33 +46,14 @@ export default function AdminPanel() {
         <LogoutButton />
       </header>
 
-      {/* Graficzne powiadomienia o błędach/sukcesach zamiast alertów */}
       <div style={{ minHeight: "50px", marginTop: "10px" }}>
         {error && (
-          <div style={{ 
-            background: "#fee2e2", 
-            color: "#b91c1c", 
-            padding: "12px", 
-            borderRadius: "8px", 
-            border: "1px solid #fecaca",
-            display: "flex",
-            alignItems: "center",
-            fontWeight: "500"
-          }}>
+          <div style={{ background: "#fee2e2", color: "#b91c1c", padding: "12px", borderRadius: "8px", border: "1px solid #fecaca", display: "flex", alignItems: "center", fontWeight: "500" }}>
             <span style={{ marginRight: "10px" }}>⚠️</span> {error}
           </div>
         )}
         {success && (
-          <div style={{ 
-            background: "#dcfce7", 
-            color: "#15803d", 
-            padding: "12px", 
-            borderRadius: "8px", 
-            border: "1px solid #bbf7d0",
-            display: "flex",
-            alignItems: "center",
-            fontWeight: "500"
-          }}>
+          <div style={{ background: "#dcfce7", color: "#15803d", padding: "12px", borderRadius: "8px", border: "1px solid #bbf7d0", display: "flex", alignItems: "center", fontWeight: "500" }}>
             <span style={{ marginRight: "10px" }}>✅</span> {success}
           </div>
         )}
@@ -89,13 +72,13 @@ export default function AdminPanel() {
       </div>
 
       <section style={{ marginTop: "30px" }}>
-        {/* Przekazujemy funkcje powiadomień do BookList, aby tam też nie było alertów */}
         <BookList 
           books={filteredBooks} 
           refreshList={fetchBooks} 
           isAdmin={true} 
           onError={showTemporaryError}
           onSuccess={showTemporarySuccess}
+          onEdit={(book) => setEditingBook(book)}
         />
       </section>
 
@@ -106,6 +89,17 @@ export default function AdminPanel() {
             fetchBooks(); 
             showTemporarySuccess("Książka została dodana pomyślnie!"); 
           }} 
+        />
+      )}
+
+      {editingBook && (
+        <EditBookModal 
+          book={editingBook}
+          onClose={() => setEditingBook(null)}
+          onUpdated={() => {
+            fetchBooks();
+            showTemporarySuccess("Dane książki zostały zaktualizowane!");
+          }}
         />
       )}
     </div>

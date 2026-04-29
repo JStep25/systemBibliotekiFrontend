@@ -26,4 +26,6 @@ export const loanBook = (data) => API.post("/loans", data);
 export const returnBook = (data) => API.post("/loans/return", data);
 export const getMyLoans = () => API.get("/loans/my");
 
+export const updateBook = (id, data) => API.put(`/books/${id}`, data);
+
 export default API;
