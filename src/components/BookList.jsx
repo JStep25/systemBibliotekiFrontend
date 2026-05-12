@@ -38,7 +38,7 @@ export default function BookList({ books, refreshList, isAdmin, onLoan, loadingI
             <div key={b.id_ksiazki} className="card">
               <h3>{b.tytul}</h3>
               <p style={{ color: "var(--text-light)" }}>{b.autor}</p>
-              <p style={{ color: "var(--text-light)" }}>{b.id_ksiazki}</p>
+              <p style={{ color: "var(--text-light)" }}>{`ID: ${b.id_ksiazki}`}</p>
 
               <span className={`badge ${b.status}`}>
                 {b.status === "dostepna" ? "Dostępna" : "Wypożyczona"}
